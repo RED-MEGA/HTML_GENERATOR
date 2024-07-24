@@ -1,10 +1,11 @@
 "use client";
 import { Api } from "@/utils/api";
 import { useRef, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const HandleClick = async () => {
     if (
@@ -12,7 +13,7 @@ export default function Home() {
       !inputRef.current.files ||
       !inputRef.current.files.length
     ) {
-      alert("Please select a file first!");
+      toast.info("Please select a file first!");
       return;
     }
     const formData = new FormData();
@@ -26,11 +27,9 @@ export default function Home() {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      alert("File uploaded successfully!");
+      toast.success("File uploaded successfully!");
     } catch (error) {
-      alert("An error occurred while uploading the file.");
-    } finally {
-      setIsLoading(false);
+      toast.error("An error occurred while uploading the file.");
     }
   };
 
@@ -47,10 +46,10 @@ export default function Home() {
       <button
         onClick={HandleClick}
         className="w-24 h-10 bg-white rounded-md font-bold text-black transition-all duration-300"
-        disabled={isLoading}
       >
-        {isLoading ? "Uploading..." : "Upload"}
+        Upload
       </button>
+      <ToastContainer theme="dark" />
     </div>
   );
 }
