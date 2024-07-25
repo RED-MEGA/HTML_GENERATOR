@@ -1,2 +1,2 @@
 export const PORT = process.env.PORT || 8000;
-export const MONGODB_URL = 'mongodb+srv://redmega:u4x4Cn7OBhdJ353P@html-generator-db.di5nsjd.mongodb.net/?retryWrites=true&w=majority&appName=html-generator-db';
+export const MONGODB_URL = process.env.MONGODB_URL;

@@ -2,6 +2,7 @@ const PORT = 8000;
 
 export const API_HOST = `http://localhost:${PORT}`;
 
+/* Object include all routes */
 export const Api = {
 	upload: `${API_HOST}/upload`,
 	keywords: `${API_HOST}/keywords`,

@@ -12,11 +12,18 @@ const upload = multer({ dest: 'uploads/' })
 
 server.use(cors());
 
+
+/* 
+    Connect with database that hosted in cloud.mongodb.com
+*/
 mongoose.connect(MONGODB_URL)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('MongoDB connection error:', err));
 
 
+/*
+    Use it for handle file upload
+*/
 server.post("/upload", upload.single('file'), (req, res) => {
     if (!req.file)
         return res.status(400).send('No file uploaded.')
@@ -40,6 +47,9 @@ server.post("/upload", upload.single('file'), (req, res) => {
 })
 
 
+/*
+    Use it to get all keywords
+*/
 server.get('/keywords', async (req, res) => {
     try {
         const keywords = await Keyword.find({}, "keyword");
@@ -50,6 +60,10 @@ server.get('/keywords', async (req, res) => {
     }
 })
 
+
+/*
+    Use it for get specific html page using id
+*/
 server.get('/keywords/view-html/:id', async (req, res) => {
     try {
         const object = await Keyword.findById(req.params.id, "html");
@@ -62,6 +76,9 @@ server.get('/keywords/view-html/:id', async (req, res) => {
     }
 })
 
+/*
+    Use it for download specific html page using id
+*/
 server.get('/keywords/download-html/:id', async (req, res) => {
     try {
         const object = await Keyword.findById(req.params.id, "html");
