@@ -31,13 +31,24 @@ server.post("/upload", upload.single('file'), (req, res) => {
             Keyword.create({
                 keyword,
                 html: generateHtml(keyword)
-            }).catch(() => {})
+            }).catch(() => { })
         );
         console.log("File processed and keywords stored");
         res.status(201).send("File uploaded successfully!");
     } catch (error) {
         console.log("Error:", error); // check error
         res.status(500).send("Error processing file")
+    }
+})
+
+
+server.get('/keywords', async (req, res) => {
+    try {
+        const keywords = await Keyword.find({},"keyword");
+        console.log(keywords);
+        res.status(200).json(keywords)
+    } catch (error) {
+        res.status(500).send("Cannot get keywords")
     }
 })
 
