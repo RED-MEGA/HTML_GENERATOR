@@ -10,7 +10,7 @@ import { generateHtml } from "./generateHtml.js";
 const server = express();
 const upload = multer({ dest: 'uploads/' })
 
-server.use(cors())
+server.use(cors());
 
 mongoose.connect(MONGODB_URL)
     .then(() => console.log('Connected to MongoDB'))
@@ -33,10 +33,8 @@ server.post("/upload", upload.single('file'), (req, res) => {
                 html: generateHtml(keyword)
             }).catch(() => { })
         );
-        console.log("File processed and keywords stored");
         res.status(201).send("File uploaded successfully!");
     } catch (error) {
-        console.log("Error:", error); // check error
         res.status(500).send("Error processing file")
     }
 })
@@ -44,18 +42,41 @@ server.post("/upload", upload.single('file'), (req, res) => {
 
 server.get('/keywords', async (req, res) => {
     try {
-        const keywords = await Keyword.find({},"keyword");
-        console.log(keywords);
-        res.status(200).json(keywords)
+        const keywords = await Keyword.find({}, "keyword");
+
+        res.status(200).json(keywords);
     } catch (error) {
-        res.status(500).send("Cannot get keywords")
+        res.status(500).send("Cannot get keywords");
     }
 })
 
+server.get('/keywords/view-html/:id', async (req, res) => {
+    try {
+        const object = await Keyword.findById(req.params.id, "html");
 
-// For test
-server.get("/", (req, res) => {
-    res.status(200).send(`Test = ${process.env.PORT}`)
+        if (!object)
+            res.status(404).send('Keyword not found');
+        res.send(object.html);
+    } catch (error) {
+        res.status(500).send("Cannot get HTML");
+    }
 })
+
+server.get('/keywords/download-html/:id', async (req, res) => {
+    try {
+        const object = await Keyword.findById(req.params.id, "html");
+
+        if (!object)
+            res.status(404).send('Keyword not found');
+        res.set({
+            'Content-Type': 'text/html',
+            'Content-Disposition': 'attachment; filename=index.html'
+        });
+        res.send(object.html);
+    } catch (error) {
+        res.status(500).send("Cannot get HTML");
+    }
+});
+
 
 server.listen(PORT, () => console.log(`Server is started at port: ${PORT}`))
